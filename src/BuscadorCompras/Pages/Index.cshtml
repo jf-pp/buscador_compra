@@ -1,0 +1,46 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Buscar ofertas";
+}
+
+<h1>Buscador de compras</h1>
+<p>Busca un producto entre los productos seleccionados y compara sus ofertas.</p>
+
+<form method="get">
+    <label for="q">Producto</label>
+    <input id="q" name="q" type="search" value="@Model.Query" placeholder="Ej. Xiaomi G27Qi" autofocus />
+    <button type="submit">Buscar</button>
+</form>
+
+@if (Model.Searched)
+{
+    if (Model.Results.Count == 0)
+    {
+        <p>No se encontró ningún producto para «@Model.Query».</p>
+    }
+    else
+    {
+        <p>@Model.Results.Count resultado(s) para «@Model.Query»:</p>
+        <ul>
+            @foreach (var product in Model.Results)
+            {
+                <li>
+                    <strong>@product.Name</strong> — @product.Brand · @product.Category
+                    @if (product.PriceMxn is not null)
+                    {
+                        <span>— $@product.PriceMxn.Value.ToString("N2") MXN</span>
+                    }
+                    @if (product.Store is not null)
+                    {
+                        <span> en @product.Store</span>
+                    }
+                    @if (product.Url is not null)
+                    {
+                        <a href="@product.Url" target="_blank" rel="noopener">Ver en tienda</a>
+                    }
+                </li>
+            }
+        </ul>
+    }
+}
